@@ -7,7 +7,7 @@
     <Copyright>© 2019 Codechu</Copyright>
     <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryUrl>https://github.com/obarlik/OAuth2Net</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
+    <RepositoryType>GitHub Public Repository</RepositoryType>
     <PackageTags>github, linkedin, oauth, authentication, authorization, signup, signin, login</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -15,7 +15,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Product>Codechu's OAuth2Net Authentication Library</Product>
     <PackageIconUrl>https://github.com/obarlik/OAuth2Net/raw/master/oauthicon.png</PackageIconUrl>
-    <PackageProjectUrl></PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/obarlik/OAuth2Net</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
