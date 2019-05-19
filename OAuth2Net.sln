@@ -3,13 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuth2.Api", "OAuth2.Api\OAuth2.Api.csproj", "{57D71D23-A6E8-4B12-912A-3E5A61CDC3FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuth2Net", "OAuth2Net\OAuth2Net.csproj", "{57D71D23-A6E8-4B12-912A-3E5A61CDC3FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuth2.LinkedInApi", "OAuth2.LinkedInApi\OAuth2.LinkedInApi.csproj", "{D94A5571-36EE-4089-BEAA-AF05E6E8D71A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuth2.GitHubApi", "OAuth2.GitHubApi\OAuth2.GitHubApi.csproj", "{D9A38F0A-A748-4C42-8B59-982C6CF83BA9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuth2Api.Test", "OAuth2Api.Test\OAuth2Api.Test.csproj", "{059324E5-B9C4-4DFC-AF92-F30D46C5DA1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuth2Net.Test", "OAuth2Net.Test\OAuth2Net.Test.csproj", "{059324E5-B9C4-4DFC-AF92-F30D46C5DA1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,14 +17,6 @@ Global
 		{57D71D23-A6E8-4B12-912A-3E5A61CDC3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57D71D23-A6E8-4B12-912A-3E5A61CDC3FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57D71D23-A6E8-4B12-912A-3E5A61CDC3FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D94A5571-36EE-4089-BEAA-AF05E6E8D71A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D94A5571-36EE-4089-BEAA-AF05E6E8D71A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D94A5571-36EE-4089-BEAA-AF05E6E8D71A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D94A5571-36EE-4089-BEAA-AF05E6E8D71A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D9A38F0A-A748-4C42-8B59-982C6CF83BA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9A38F0A-A748-4C42-8B59-982C6CF83BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9A38F0A-A748-4C42-8B59-982C6CF83BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9A38F0A-A748-4C42-8B59-982C6CF83BA9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{059324E5-B9C4-4DFC-AF92-F30D46C5DA1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{059324E5-B9C4-4DFC-AF92-F30D46C5DA1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{059324E5-B9C4-4DFC-AF92-F30D46C5DA1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
