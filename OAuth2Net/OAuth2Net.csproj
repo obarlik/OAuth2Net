@@ -5,16 +5,24 @@
     <Company>Codechu</Company>
     <Description>OAuth authentication for popular services.</Description>
     <Copyright>© 2019 Codechu</Copyright>
-    <PackageLicenseExpression>https://raw.githubusercontent.com/obarlik/OAuth2Net/master/LICENSE</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryUrl>https://github.com/obarlik/OAuth2Net</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>github, linkedin, oauth, authentication, authorization, signup, signin, login</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NUnit" Version="3.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
