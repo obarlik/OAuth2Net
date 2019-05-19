@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace OAuth2.LinkedInApi
+namespace OAuth2Net
 {
-    public class OAuth2LinkedIn : OAuth2.Api.OAuth2Api
+    public class OAuth2LinkedIn : OAuth2App
     {        
         public string PersonId { get; set; }
         public string PersonName { get; set; }

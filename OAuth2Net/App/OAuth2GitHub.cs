@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.Text;
-using OAuth2.Api;
 using Newtonsoft.Json.Linq;
 
-namespace OAuth2.GitHubApi
+namespace OAuth2Net
 {
-    public class OAuth2GitHub : OAuth2Api
+    public class OAuth2GitHub : OAuth2App
     {
         public string PersonId { get; protected set; }
         public string PersonName { get; protected set; }

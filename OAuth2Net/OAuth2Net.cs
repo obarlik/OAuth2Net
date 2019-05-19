@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace OAuth2.Api
+namespace OAuth2Net
 {
-    public class OAuth2Api
+    public class OAuth2App
     {
         string ClientId;
         string AuthorizationUrl;
@@ -27,22 +27,22 @@ namespace OAuth2.Api
         public string ErrorDescription;
         public string ErrorUri;
 
-        Action<OAuth2Api> Success;
-        Action<OAuth2Api> Failure;
+        Action<OAuth2App> Success;
+        Action<OAuth2App> Failure;
 
         protected Dictionary<string, string> AuthorizationParams = new Dictionary<string, string>();
 
-        static Dictionary<string, OAuth2Api> Authentications = new Dictionary<string, OAuth2Api>();
+        static Dictionary<string, OAuth2App> Authentications = new Dictionary<string, OAuth2App>();
 
 
-        public OAuth2Api(
+        public OAuth2App(
             string authorizationUrl,
             string accessTokenUrl,
             string client_id,
             string redirect_uri = null,
             string scope = null,
-            Action<OAuth2Api> success = null, 
-            Action<OAuth2Api> failure = null)
+            Action<OAuth2App> success = null, 
+            Action<OAuth2App> failure = null)
         {
             AuthorizationUrl = authorizationUrl;
             AccessTokenUrl = accessTokenUrl;
@@ -84,7 +84,7 @@ namespace OAuth2.Api
         }
 
 
-        static void AddAuthentication(OAuth2Api api)
+        static void AddAuthentication(OAuth2App api)
         {
             if (!Authentications.ContainsKey(api.State))
                 lock (Authentications)
@@ -95,12 +95,12 @@ namespace OAuth2.Api
         }
 
 
-        static OAuth2Api FindApi(string state)
+        static OAuth2App FindApi(string state)
         {
             if (Authentications.ContainsKey(state))
                 lock (Authentications)
                 {
-                    if (Authentications.TryGetValue(state, out OAuth2Api api))
+                    if (Authentications.TryGetValue(state, out OAuth2App api))
                     {
                         Authentications.Remove(api.State);
                         return api;

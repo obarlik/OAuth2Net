@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using OAuth2.GitHubApi;
+using OAuth2Net;
 using System.Diagnostics;
 using System.Net;
 using System.Text;
@@ -42,16 +42,12 @@ namespace Tests
             var context = listener.GetContext();
 
 
-            OAuth2.Api.OAuth2Api.Callback(
+            OAuth2App.Callback(
                 context.Request.QueryString["code"],
                 context.Request.QueryString["error"],
                 context.Request.QueryString["state"],
                 context.Request.QueryString["error_description"],
                 context.Request.QueryString["error_uri"]);
-
-
-
-
         }
     }
 }
