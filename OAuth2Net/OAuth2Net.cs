@@ -97,6 +97,9 @@ namespace OAuth2Net
 
         static OAuth2App FindApi(string state)
         {
+            if (string.IsNullOrWhiteSpace(state))
+                return null;
+
             if (Authentications.ContainsKey(state))
                 lock (Authentications)
                 {
@@ -118,10 +121,7 @@ namespace OAuth2Net
             string error_description = null,
             string error_uri = null)
         {
-            var api = FindApi(state);
-
-            if (api != null)
-                api._Callback(code, error, error_description, error_uri);
+            FindApi(state)?._Callback(code, error, error_description, error_uri);
         }
 
 
