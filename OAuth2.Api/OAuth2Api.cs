@@ -95,20 +95,19 @@ namespace OAuth2.Api
         }
 
 
-        static void RemoveAuthentication(OAuth2Api api)
-        {
-            if (Authentications.ContainsKey(api.State))
-                lock (Authentications)
-                {
-                    if (Authentications.ContainsKey(api.State))
-                        Authentications.Remove(api.State);
-                }
-        }
-
-
         static OAuth2Api FindApi(string state)
         {
-            return Authentications.TryGetValue(state, out OAuth2Api api) ? api : null;
+            if (Authentications.ContainsKey(state))
+                lock (Authentications)
+                {
+                    if (Authentications.TryGetValue(state, out OAuth2Api api))
+                    {
+                        Authentications.Remove(api.State);
+                        return api;
+                    }
+                }
+
+            return null;
         }
 
 
