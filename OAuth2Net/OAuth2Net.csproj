@@ -15,7 +15,9 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Product>Codechu's OAuth2Net Authentication Library</Product>
     <PackageIconUrl>https://github.com/obarlik/OAuth2Net/raw/master/oauthicon.png</PackageIconUrl>
-    <PackageProjectUrl></PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/obarlik/OAuth2Net</PackageProjectUrl>
+    <Authors>obarlik</Authors>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
