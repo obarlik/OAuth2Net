@@ -9,7 +9,7 @@ namespace Tests
     public class GithubTests
     {
         HttpListener listener;
-        OAuth2GitHubApi api;
+        OAuth2GitHub api;
         string result;
 
 
@@ -19,7 +19,7 @@ namespace Tests
             listener = new HttpListener();
             listener.Prefixes.Add("http://localhost:6625/auth/github/");
 
-            api = new OAuth2GitHubApi(
+            api = new OAuth2GitHub(
                 "5e52550211ef44b46330",
                 "a892638b5995ece53b16256e9182364fff549c28",
                 "http://localhost:6625/auth/github/default.aspx",

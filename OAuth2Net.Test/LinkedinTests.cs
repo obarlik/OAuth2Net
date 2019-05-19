@@ -9,7 +9,7 @@ namespace Tests
     public class LinkedinTests
     {
         HttpListener listener;
-        OAuth2LinkedInApi api;
+        OAuth2LinkedIn api;
         string result;
 
 
@@ -19,7 +19,7 @@ namespace Tests
             listener = new HttpListener();
             listener.Prefixes.Add("http://localhost:6625/auth/linkedin/");
 
-            api = new OAuth2LinkedInApi(
+            api = new OAuth2LinkedIn(
                 "86qi1hyfpuxefy",
                 "LwaFNhDSzTYwHSKA",
                 "http://localhost:6625/auth/linkedin/default.aspx",
