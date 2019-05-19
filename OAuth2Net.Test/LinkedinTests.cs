@@ -20,8 +20,8 @@ namespace Tests
             listener.Prefixes.Add("http://localhost:6625/auth/linkedin/");
 
             api = new OAuth2LinkedIn(
-                "86qi1hyfpuxefy",
-                "LwaFNhDSzTYwHSKA",
+                "86lgvuhdop1tce",
+                "KVVScEdl1fbpTVyW",
                 "http://localhost:6625/auth/linkedin/default.aspx",
                 success: api => result = "success",
                 failure: api => result = "failure");

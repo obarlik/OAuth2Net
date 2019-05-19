@@ -33,7 +33,7 @@ namespace OAuth2Net
                     var json = JObject.Parse(cli.DownloadString("https://api.github.com/user"));
 
                     gitHubApi.PersonId = json["id"].Value<string>();
-                    gitHubApi.PersonName = json["name"].Value<string>();
+                    gitHubApi.PersonName = json["name"].Value<string>() ?? json["login"].Value<string>();
                     gitHubApi.PersonEmail = json["email"].Value<string>();
                     gitHubApi.PersonPhotoUrl = json["avatar_url"].Value<string>();
                     gitHubApi.PersonProfileUrl = json["html_url"].Value<string>();
