@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>Codechu</Company>
+    <Description>OAuth authentication for popular services.</Description>
+    <Copyright>© 2019 Codechu</Copyright>
+    <PackageLicenseExpression>https://raw.githubusercontent.com/obarlik/OAuth2Net/master/LICENSE</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/obarlik/OAuth2Net</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>github, linkedin, oauth, authentication, authorization, signup, signin, login</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
