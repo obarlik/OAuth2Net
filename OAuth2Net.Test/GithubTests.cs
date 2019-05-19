@@ -20,8 +20,8 @@ namespace Tests
             listener.Prefixes.Add("http://localhost:6625/auth/github/");
 
             api = new OAuth2GitHub(
-                "4722fcf139915e3ff0f1",
-                "afea9fcac75c2bae6ea2603e7871b5cacadabe44",
+                "Iv1.6d67c0533ba8029c",
+                "5e413805b8cb0d1fee5b07fd330f94e205939060",
                 "http://localhost:6625/auth/github/default.aspx",
                 success: api => result = "success",
                 failure: api => result = "failure");

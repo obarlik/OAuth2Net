@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json.Linq;
@@ -34,6 +35,7 @@ namespace OAuth2Net
                     var cli = gitHubApi.NewClient();
                     var json = JObject.Parse(cli.DownloadString("https://api.github.com/user"));
 
+
                     gitHubApi.PersonId = json["id"].Value<string>();
                     gitHubApi.PersonName = json["name"].Value<string>() ?? json["login"].Value<string>();
                     gitHubApi.PersonEmail = json["email"].Value<string>();
@@ -41,6 +43,24 @@ namespace OAuth2Net
                     gitHubApi.PersonProfileUrl = json["html_url"].Value<string>();
                     gitHubApi.PersonLocation = json["location"].Value<string>();
                     gitHubApi.PersonInfo = json["bio"].Value<string>();
+
+                    if (string.IsNullOrWhiteSpace(gitHubApi.PersonEmail))
+                        try
+                        {
+                            cli = gitHubApi.NewClient();
+                            var text = cli.DownloadString("https://api.github.com/user/emails");
+                            var mails = JArray.Parse(text);
+
+                            gitHubApi.PersonEmail =
+                                mails.Where(m => m["primary"].Value<bool>())
+                                .Select(m => m["email"].Value<string>())
+                                .FirstOrDefault();
+                        }
+                        catch
+                        {
+                            // tried
+                        }
+                                       
 
                     success((OAuth2GitHub)success_api);
                 },
