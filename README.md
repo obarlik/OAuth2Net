@@ -1,2 +1,6 @@
-# LinkedIn.Api2
-Linkedin API v2 Authentication 
+# OAuth2Net
+OAuth2 Implementations for popular services.
+
+## Supported API's
+  * Linkedin v2
+  * GitHub
