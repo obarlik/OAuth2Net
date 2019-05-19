@@ -8,10 +8,10 @@ namespace OAuth2Net
 {
     public class OAuth2LinkedIn : OAuth2App
     {        
-        public string PersonId { get; set; }
-        public string PersonName { get; set; }
-        public string PersonEmail { get; set; }
-        public string PersonPhotoUrl { get; set; }
+        public string PersonId { get; protected set; }
+        public string PersonName { get; protected set; }
+        public string PersonEmail { get; protected set; }
+        public string PersonPhotoUrl { get; protected set; }
 
         public OAuth2LinkedIn(
             string client_id,

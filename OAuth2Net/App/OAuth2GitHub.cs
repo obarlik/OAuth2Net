@@ -12,6 +12,8 @@ namespace OAuth2Net
         public string PersonEmail { get; protected set; }
         public string PersonPhotoUrl { get; protected set; }
         public string PersonProfileUrl { get; protected set; }
+        public string PersonLocation { get; protected set; }
+        public string PersonInfo { get; protected set; }
 
         public OAuth2GitHub(
             string client_id,
@@ -37,6 +39,8 @@ namespace OAuth2Net
                     gitHubApi.PersonEmail = json["email"].Value<string>();
                     gitHubApi.PersonPhotoUrl = json["avatar_url"].Value<string>();
                     gitHubApi.PersonProfileUrl = json["html_url"].Value<string>();
+                    gitHubApi.PersonLocation = json["location"].Value<string>();
+                    gitHubApi.PersonInfo = json["bio"].Value<string>();
 
                     success((OAuth2GitHub)success_api);
                 },
