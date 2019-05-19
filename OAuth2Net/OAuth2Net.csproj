@@ -11,6 +11,11 @@
     <PackageTags>github, linkedin, oauth, authentication, authorization, signup, signin, login</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Product>Codechu's OAuth2Net Authentication Library</Product>
+    <PackageIconUrl>https://github.com/obarlik/OAuth2Net/raw/master/oauthicon.png</PackageIconUrl>
+    <PackageProjectUrl></PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
