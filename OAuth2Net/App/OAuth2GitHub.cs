@@ -19,13 +19,14 @@ namespace OAuth2Net
         public OAuth2GitHub(
             string client_id,
             string client_secret,
-            string redirect_uri = null, 
-            Action<OAuth2GitHub> success = null, 
+            string redirect_uri, 
+            Action<OAuth2GitHub> success, 
             Action<OAuth2GitHub> failure = null) 
             : base(
                 "https://github.com/login/oauth/authorize",
                 "https://github.com/login/oauth/access_token", 
                 client_id, 
+                client_secret,
                 redirect_uri, 
                 null,
                 success_api =>
@@ -66,7 +67,6 @@ namespace OAuth2Net
                 },
                 failure_api => failure((OAuth2GitHub)failure_api))
         {
-            AuthorizationParams["client_secret"] = client_secret;
         }
 
 

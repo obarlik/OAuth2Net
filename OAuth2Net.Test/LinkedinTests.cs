@@ -49,6 +49,7 @@ namespace Tests
                 context.Request.QueryString["error_description"],
                 context.Request.QueryString["error_uri"]);
 
+            Assert.AreEqual(result, "success");
         }
     }
 }

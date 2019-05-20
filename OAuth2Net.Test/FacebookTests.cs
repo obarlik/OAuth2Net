@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Tests
 {
-    public class GithubTests
+    public class FacebookTests
     {
         HttpListener listener;
-        OAuth2GitHub api;
+        OAuth2Facebook api;
         string result;
 
 
@@ -17,12 +17,12 @@ namespace Tests
         public void Setup()
         {
             listener = new HttpListener();
-            listener.Prefixes.Add("http://localhost:6625/auth/github/");
+            listener.Prefixes.Add("http://localhost:6625/auth/facebook/");
 
-            api = new OAuth2GitHub(
-                "Iv1.6d67c0533ba8029c",
-                "5e413805b8cb0d1fee5b07fd330f94e205939060",
-                "http://localhost:6625/auth/github/default.aspx",
+            api = new OAuth2Facebook(
+                "616758748762375",
+                "6bb095635fbda9b69b4994f58b7da969",
+                "http://localhost:6625/auth/facebook/default.aspx",
                 success: api => result = "success",
                 failure: api => result = "failure");
         }
@@ -41,14 +41,12 @@ namespace Tests
 
             var context = listener.GetContext();
 
-
             OAuth2App.Callback(
                 context.Request.QueryString["code"],
                 context.Request.QueryString["error"],
                 context.Request.QueryString["state"],
                 context.Request.QueryString["error_description"],
                 context.Request.QueryString["error_uri"]);
-
 
             Assert.AreEqual(result, "success");
         }

@@ -11,6 +11,7 @@ namespace OAuth2Net
     public class OAuth2App
     {
         string ClientId;
+        string ClientSecret;
         string AuthorizationUrl;
         string AccessTokenUrl;
         string RedirectUri;
@@ -39,7 +40,8 @@ namespace OAuth2Net
             string authorizationUrl,
             string accessTokenUrl,
             string client_id,
-            string redirect_uri = null,
+            string client_secret,
+            string redirect_uri,
             string scope = null,
             Action<OAuth2App> success = null, 
             Action<OAuth2App> failure = null)
@@ -47,6 +49,7 @@ namespace OAuth2Net
             AuthorizationUrl = authorizationUrl;
             AccessTokenUrl = accessTokenUrl;
             ClientId = client_id;
+            ClientSecret = client_secret;
             RedirectUri = redirect_uri;
             Scope = scope;
             State = Guid.NewGuid().ToString("N");
@@ -70,13 +73,14 @@ namespace OAuth2Net
             var authorizationUri = new UriBuilder(AuthorizationUrl);
 
             authorizationUri.Query +=
-                  (string.IsNullOrWhiteSpace(authorizationUri.Query) ? "" : "&")
-                + $"response_type=code"
-                + $"&client_id={ClientId}"
-                + (!AuthorizationParams.Any() ? "" : $"&{string.Join("&", AuthorizationParams.Select(p => p.Key + "=" + Uri.EscapeDataString(p.Value)))}")
-                + (Scope == null ? "" : $"&scope={Uri.EscapeDataString(Scope)}")
-                + $"&state={State}"
-                + (RedirectUri == null ? "" : $"&redirect_uri={Uri.EscapeDataString(RedirectUri2)}");
+                  (string.IsNullOrWhiteSpace(authorizationUri.Query) ? "" : "&") +
+                  $"response_type=code" +
+                  $"&client_id={ClientId}" +
+                  (ClientSecret != null ? $"&client_secret={ClientSecret}" : "") +
+                  (!AuthorizationParams.Any() ? "" : $"&{string.Join("&", AuthorizationParams.Select(p => p.Key + "=" + Uri.EscapeDataString(p.Value)))}") +
+                  (Scope == null ? "" : $"&scope={Uri.EscapeDataString(Scope)}") +
+                  $"&state={State}" +
+                  (RedirectUri == null ? "" : $"&redirect_uri={Uri.EscapeDataString(RedirectUri2)}");
 
             AddAuthentication(this);
 
@@ -151,6 +155,7 @@ namespace OAuth2Net
             var json = cli.UploadString(
                 AccessTokenUrl,
                 $"client_id={ClientId}" +
+                (ClientSecret != null ? $"&client_secret={ClientSecret}" : "") +
                 (!AuthorizationParams.Any() ? "" : $"&{string.Join("&", AuthorizationParams.Select(p => p.Key + "=" + Uri.EscapeDataString(p.Value)))}") +
                 $"&grant_type=authorization_code" +
                 $"&redirect_uri={Uri.EscapeDataString(RedirectUri2)}" +

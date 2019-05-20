@@ -24,6 +24,7 @@ namespace OAuth2Net
                 "https://www.linkedin.com/oauth/v2/authorization",
                 "https://www.linkedin.com/oauth/v2/accessToken",
                 client_id,
+                client_secret,
                 redirect_uri,
                 scope,
                 success_api => 
@@ -57,7 +58,6 @@ namespace OAuth2Net
                 },
                 failure_api => failure((OAuth2LinkedIn)failure_api))
         {
-            AuthorizationParams["client_secret"] = client_secret;
         }
 
 
