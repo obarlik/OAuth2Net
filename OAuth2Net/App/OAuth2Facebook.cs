@@ -31,14 +31,23 @@ namespace OAuth2Net
             success: api => {
                 var facebook = api as OAuth2Facebook;
 
-                var cli = facebook.NewClient();
-                var json = cli.DownloadString("https://graph.facebook.com/v3.3/me?fields=id,name,picture,email");
-                var data = JObject.Parse(json);
+                using (var cli = facebook.NewClient())
+                {
+                    var json = cli.DownloadString($"https://graph.facebook.com/v3.3/me?access_token={facebook.AccessToken}&fields=id,name,email");
+                    var data = JObject.Parse(json);
 
-                facebook.PersonId = data["id"].Value<string>();
-                facebook.PersonName = data["name"].Value<string>();
-                facebook.PersonPhotoUrl = data["picture"].Value<string>();
-                facebook.PersonEmail = data["email"].Value<string>();
+                    facebook.PersonId = data["id"].Value<string>();
+                    facebook.PersonName = data["name"].Value<string>();
+                    facebook.PersonEmail = data["email"].Value<string>();
+                }
+
+                using (var cli = facebook.NewClient())
+                {
+                    var json = cli.DownloadString($"https://graph.facebook.com/{facebook.PersonId}/picture?type=large&redirect=false");
+                    var data = JObject.Parse(json);
+
+                    facebook.PersonPhotoUrl = data["data"]["url"].Value<string>();
+                }
 
                 success?.Invoke(facebook);
             })

@@ -20,8 +20,8 @@ namespace Tests
             listener.Prefixes.Add("http://localhost:6625/auth/facebook/");
 
             api = new OAuth2Facebook(
-                "616758748762375",
-                "6bb095635fbda9b69b4994f58b7da969",
+                "2293070497624844",
+                "c530b7a2614a93b328f0c170c6fcd001",
                 "http://localhost:6625/auth/facebook/default.aspx",
                 success: api => result = "success",
                 failure: api => result = "failure");

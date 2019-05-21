@@ -15,18 +15,20 @@ namespace OAuth2Net
         string AuthorizationUrl;
         string AccessTokenUrl;
         string RedirectUri;
-        string RedirectUri2;
         string Scope;
+
+        public string ReturnUrl { get; protected set; }
 
         public string State;
 
         public string AuthorizationCode;
-        public string AccessToken;
-        public string AccessTokenType;
 
-        public string Error;
-        public string ErrorDescription;
-        public string ErrorUri;
+        public string AccessToken { get; protected set; }
+        public string AccessTokenType { get; protected set; }
+
+        public string Error { get; protected set; }
+        public string ErrorDescription { get; protected set; }
+        public string ErrorUri { get; protected set; }
 
         Action<OAuth2App> Success;
         Action<OAuth2App> Failure;
@@ -61,14 +63,7 @@ namespace OAuth2Net
 
         public string GetAuthorizationUrl(string returnUrl = null)
         {
-            var cbUri = new UriBuilder(RedirectUri);
-
-            cbUri.Query +=
-                string.IsNullOrWhiteSpace(returnUrl) ? "" :
-                    ((string.IsNullOrWhiteSpace(cbUri.Query) ? "" : "&")
-                   + $"ReturnUrl={Uri.EscapeDataString(returnUrl)}");
-
-            RedirectUri2 = cbUri.Uri.AbsoluteUri;
+            ReturnUrl = returnUrl;
 
             var authorizationUri = new UriBuilder(AuthorizationUrl);
 
@@ -80,7 +75,7 @@ namespace OAuth2Net
                   (!AuthorizationParams.Any() ? "" : $"&{string.Join("&", AuthorizationParams.Select(p => p.Key + "=" + Uri.EscapeDataString(p.Value)))}") +
                   (Scope == null ? "" : $"&scope={Uri.EscapeDataString(Scope)}") +
                   $"&state={State}" +
-                  (RedirectUri == null ? "" : $"&redirect_uri={Uri.EscapeDataString(RedirectUri2)}");
+                  (RedirectUri == null ? "" : $"&redirect_uri={Uri.EscapeDataString(RedirectUri)}");
 
             AddAuthentication(this);
 
@@ -158,7 +153,7 @@ namespace OAuth2Net
                 (ClientSecret != null ? $"&client_secret={ClientSecret}" : "") +
                 (!AuthorizationParams.Any() ? "" : $"&{string.Join("&", AuthorizationParams.Select(p => p.Key + "=" + Uri.EscapeDataString(p.Value)))}") +
                 $"&grant_type=authorization_code" +
-                $"&redirect_uri={Uri.EscapeDataString(RedirectUri2)}" +
+                $"&redirect_uri={Uri.EscapeDataString(RedirectUri)}" +
                 $"&code={AuthorizationCode}" +
                 $"&state={State}");
 
