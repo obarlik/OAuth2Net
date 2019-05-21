@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Company>Codechu</Company>
-    <Description>OAuth authentication for popular services.</Description>
+    <Description>OAuth authentication for popular services.
+LinkedIn v2, Github, Facebook</Description>
     <Copyright>© 2019 Codechu</Copyright>
     <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryUrl>https://github.com/obarlik/OAuth2Net</RepositoryUrl>
@@ -17,7 +18,7 @@
     <PackageIconUrl>https://github.com/obarlik/OAuth2Net/raw/master/oauthicon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/obarlik/OAuth2Net</PackageProjectUrl>
     <Authors>obarlik</Authors>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
