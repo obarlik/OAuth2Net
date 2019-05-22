@@ -6,4 +6,4 @@ OAuth2 Implementations for popular services.
   * GitHub
   * Facebook GraphAPI v3.3
 
->You can find usage samples in demo application.
+>You can find usage samples in OAuth2Net.Demo ASP.NET application.
