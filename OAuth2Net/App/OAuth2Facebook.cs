@@ -41,7 +41,7 @@ namespace OAuth2Net
                     var json = cli.DownloadString($"https://graph.facebook.com/{facebook.PersonId}/picture?type=large&redirect=false");
                     var data = JObject.Parse(json);
 
-                    facebook.PersonPhotoUrl = data["data"]?["url"].Value<string>();
+                    facebook.PersonPhotoUrl = data["data"]?["url"]?.Value<string>();
                 }
 
                 success?.Invoke(facebook);

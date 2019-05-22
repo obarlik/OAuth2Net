@@ -30,13 +30,13 @@ namespace OAuth2Net
                         var jsonText = cli.DownloadString("https://api.github.com/user");
                         var json = JObject.Parse(jsonText);
 
-                        gitHubApi.PersonId = json["id"].Value<string>();
-                        gitHubApi.PersonName = json["name"].Value<string>() ?? json["login"].Value<string>();
-                        gitHubApi.PersonEmail = json["email"].Value<string>();
-                        gitHubApi.PersonPhotoUrl = json["avatar_url"].Value<string>();
-                        gitHubApi.PersonProfileUrl = json["html_url"].Value<string>();
-                        gitHubApi.PersonLocation = json["location"].Value<string>();
-                        gitHubApi.PersonInfo = json["bio"].Value<string>();
+                        gitHubApi.PersonId = json["id"]?.Value<string>();
+                        gitHubApi.PersonName = json["name"]?.Value<string>() ?? json["login"]?.Value<string>();
+                        gitHubApi.PersonEmail = json["email"]?.Value<string>();
+                        gitHubApi.PersonPhotoUrl = json["avatar_url"]?.Value<string>();
+                        gitHubApi.PersonProfileUrl = json["html_url"]?.Value<string>();
+                        gitHubApi.PersonLocation = json["location"]?.Value<string>();
+                        gitHubApi.PersonInfo = json["bio"]?.Value<string>();
                     }
 
                     if (string.IsNullOrWhiteSpace(gitHubApi.PersonEmail))
@@ -48,8 +48,8 @@ namespace OAuth2Net
                                 var mails = JArray.Parse(text);
 
                                 gitHubApi.PersonEmail =
-                                    mails.Where(m => m["primary"].Value<bool>())
-                                    .Select(m => m["email"].Value<string>())
+                                    mails.Where(m => m["primary"]?.Value<bool>() ?? false)
+                                    .Select(m => m["email"]?.Value<string>())
                                     .FirstOrDefault();
                             }
                         }
