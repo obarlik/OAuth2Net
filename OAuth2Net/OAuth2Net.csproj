@@ -18,7 +18,7 @@ LinkedIn v2, GitHub, Facebook v3.3, Google v2</Description>
     <PackageIconUrl>https://github.com/obarlik/OAuth2Net/raw/master/oauthicon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/obarlik/OAuth2Net</PackageProjectUrl>
     <Authors>obarlik</Authors>
-    <Version>1.0.6.1</Version>
+    <Version>1.0.6.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
