@@ -10,12 +10,6 @@ namespace OAuth2Net
 {
     public class OAuth2Google : OAuth2App
     {
-        public string PersonId { get; protected set; }
-        public string PersonName { get; protected set; }
-        public string PersonEmail { get; protected set; }
-        public string PersonPhotoUrl { get; protected set; }
-
-
         public OAuth2Google(
                 string client_id,
                 string client_secret,
@@ -41,6 +35,8 @@ namespace OAuth2Net
                     google.PersonName = data["name"].Value<string>();
                     google.PersonEmail = data["email"].Value<string>();
                     google.PersonPhotoUrl = data["picture"].Value<string>();
+                    google.PersonProfileUrl = data["profile"].Value<string>();
+                    google.PersonLocale = data["locale"].Value<string>();
                 }
 
                 success?.Invoke(google);

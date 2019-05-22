@@ -8,14 +8,6 @@ namespace OAuth2Net
 {
     public class OAuth2GitHub : OAuth2App
     {
-        public string PersonId { get; protected set; }
-        public string PersonName { get; protected set; }
-        public string PersonEmail { get; protected set; }
-        public string PersonPhotoUrl { get; protected set; }
-        public string PersonProfileUrl { get; protected set; }
-        public string PersonLocation { get; protected set; }
-        public string PersonInfo { get; protected set; }
-
         public OAuth2GitHub(
             string client_id,
             string client_secret,
@@ -35,7 +27,8 @@ namespace OAuth2Net
 
                     using (var cli = gitHubApi.NewAuthorizedClient("application/vnd.github.machine-man-preview+json"))
                     {
-                        var json = JObject.Parse(cli.DownloadString("https://api.github.com/user"));
+                        var jsonText = cli.DownloadString("https://api.github.com/user");
+                        var json = JObject.Parse(jsonText);
 
                         gitHubApi.PersonId = json["id"].Value<string>();
                         gitHubApi.PersonName = json["name"].Value<string>() ?? json["login"].Value<string>();

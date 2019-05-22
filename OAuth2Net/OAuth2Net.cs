@@ -18,6 +18,16 @@ namespace OAuth2Net
         string RedirectUri;
         string Scope;
 
+        public string PersonId { get; protected set; }
+        public string PersonName { get; protected set; }
+        public string PersonEmail { get; protected set; }
+        public string PersonPhotoUrl { get; protected set; }
+        public string PersonProfileUrl { get; protected set; }
+        public string PersonLocation { get; protected set; }
+        public string PersonInfo { get; protected set; }
+        public string PersonLocale { get; protected set; }
+
+
         public string ReturnUrl { get; protected set; }
 
         public string State;

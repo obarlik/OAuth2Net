@@ -9,12 +9,6 @@ namespace OAuth2Net
 {
     public class OAuth2Facebook : OAuth2App
     {
-        public string PersonId { get; protected set; }
-        public string PersonName { get; protected set; }
-        public string PersonEmail { get; protected set; }
-        public string PersonPhotoUrl { get; protected set; }
-
-
         public OAuth2Facebook(
                 string client_id,
                 string client_secret,
@@ -37,9 +31,9 @@ namespace OAuth2Net
                     var json = cli.DownloadString($"https://graph.facebook.com/v3.3/me?access_token={facebook.AccessToken}&fields=id,name,email");
                     var data = JObject.Parse(json);
 
-                    facebook.PersonId = data["id"].Value<string>();
-                    facebook.PersonName = data["name"].Value<string>();
-                    facebook.PersonEmail = data["email"].Value<string>();
+                    facebook.PersonId = data["id"]?.Value<string>();
+                    facebook.PersonName = data["name"]?.Value<string>();
+                    facebook.PersonEmail = data["email"]?.Value<string>();
                 }
 
                 using (var cli = facebook.NewAuthorizedClient("application/json"))
