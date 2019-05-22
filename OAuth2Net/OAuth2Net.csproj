@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Company>Codechu</Company>
     <Description>OAuth authentication for popular services.
-LinkedIn v2, Github, Facebook v3.3, Google</Description>
+LinkedIn v2, GitHub, Facebook v3.3, Google v2</Description>
     <Copyright>© 2019 Codechu</Copyright>
     <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryUrl>https://github.com/obarlik/OAuth2Net</RepositoryUrl>
@@ -18,7 +18,7 @@ LinkedIn v2, Github, Facebook v3.3, Google</Description>
     <PackageIconUrl>https://github.com/obarlik/OAuth2Net/raw/master/oauthicon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/obarlik/OAuth2Net</PackageProjectUrl>
     <Authors>obarlik</Authors>
-    <Version>1.0.6</Version>
+    <Version>1.0.6.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
