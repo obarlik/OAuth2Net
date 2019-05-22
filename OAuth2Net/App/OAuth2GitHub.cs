@@ -33,29 +33,32 @@ namespace OAuth2Net
                 {
                     var gitHubApi = success_api as OAuth2GitHub;
 
-                    var cli = gitHubApi.NewClient();
-                    var json = JObject.Parse(cli.DownloadString("https://api.github.com/user"));
+                    using (var cli = gitHubApi.NewAuthorizedClient("application/vnd.github.machine-man-preview+json"))
+                    {
+                        var json = JObject.Parse(cli.DownloadString("https://api.github.com/user"));
 
-
-                    gitHubApi.PersonId = json["id"].Value<string>();
-                    gitHubApi.PersonName = json["name"].Value<string>() ?? json["login"].Value<string>();
-                    gitHubApi.PersonEmail = json["email"].Value<string>();
-                    gitHubApi.PersonPhotoUrl = json["avatar_url"].Value<string>();
-                    gitHubApi.PersonProfileUrl = json["html_url"].Value<string>();
-                    gitHubApi.PersonLocation = json["location"].Value<string>();
-                    gitHubApi.PersonInfo = json["bio"].Value<string>();
+                        gitHubApi.PersonId = json["id"].Value<string>();
+                        gitHubApi.PersonName = json["name"].Value<string>() ?? json["login"].Value<string>();
+                        gitHubApi.PersonEmail = json["email"].Value<string>();
+                        gitHubApi.PersonPhotoUrl = json["avatar_url"].Value<string>();
+                        gitHubApi.PersonProfileUrl = json["html_url"].Value<string>();
+                        gitHubApi.PersonLocation = json["location"].Value<string>();
+                        gitHubApi.PersonInfo = json["bio"].Value<string>();
+                    }
 
                     if (string.IsNullOrWhiteSpace(gitHubApi.PersonEmail))
                         try
                         {
-                            cli = gitHubApi.NewClient();
-                            var text = cli.DownloadString("https://api.github.com/user/emails");
-                            var mails = JArray.Parse(text);
+                            using (var cli = gitHubApi.NewAuthorizedClient("application/vnd.github.machine-man-preview+json"))
+                            {
+                                var text = cli.DownloadString("https://api.github.com/user/emails");
+                                var mails = JArray.Parse(text);
 
-                            gitHubApi.PersonEmail =
-                                mails.Where(m => m["primary"].Value<bool>())
-                                .Select(m => m["email"].Value<string>())
-                                .FirstOrDefault();
+                                gitHubApi.PersonEmail =
+                                    mails.Where(m => m["primary"].Value<bool>())
+                                    .Select(m => m["email"].Value<string>())
+                                    .FirstOrDefault();
+                            }
                         }
                         catch
                         {
@@ -68,19 +71,5 @@ namespace OAuth2Net
                 failure_api => failure((OAuth2GitHub)failure_api))
         {
         }
-
-
-        public WebClient NewClient(string agent = null)
-        {
-            var cli = new WebClient();
-
-            cli.Headers["Accept"] = "application/vnd.github.machine-man-preview+json";
-            cli.Headers["User-Agent"] = agent ?? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134";
-            cli.Headers["Authorization"] = $"{AccessTokenType} {AccessToken}";
-            cli.Encoding = Encoding.UTF8;
-
-            return cli;
-        }
-
     }
 }

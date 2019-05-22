@@ -36,11 +36,11 @@ namespace OAuth2Net
                     linkedInApi.PersonId = profileJson["id"].Value<string>();
 
                     linkedInApi.PersonName =
-                        profileJson["firstName"]?["localized"].First.First.Value<string>()
-                        + " " + profileJson["lastName"]?["localized"].First.First.Value<string>();
+                        profileJson["firstName"]?["localized"].First?.First.Value<string>()
+                        + " " + profileJson["lastName"]?["localized"]?.First?.First.Value<string>();
 
                     linkedInApi.PersonEmail =
-                        emailJson["elements"].First["handle~"]?["emailAddress"].Value<string>();
+                        emailJson["elements"].First?["handle~"]?["emailAddress"].Value<string>();
 
                     linkedInApi.PersonPhotoUrl =
                         profileJson["profilePicture"]?["displayImage~"]?["elements"]
@@ -48,7 +48,7 @@ namespace OAuth2Net
                             new
                             {
                                 width = el["data"]?["com.linkedin.digitalmedia.mediaartifact.StillImage"]?["storageSize"]?["width"].Value<int>(),
-                                url = el["identifiers"].First["identifier"].Value<string>()
+                                url = el["identifiers"].First?["identifier"].Value<string>()
                             })
                             .OrderByDescending(el => el.width)
                             .Select(el => el.url)
@@ -61,21 +61,9 @@ namespace OAuth2Net
         }
 
 
-        public WebClient NewClient(string agent = null)
-        {
-            var cli = new WebClient();
-
-            cli.Headers["Authorization"] = "Bearer " + AccessToken;
-            cli.Headers["User-Agent"] = agent ?? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134";
-            cli.Encoding = Encoding.UTF8;
-
-            return cli;
-        }
-
-
         public string GetProfileJson()
         {
-            return NewClient().DownloadString(
+            return NewAuthorizedClient().DownloadString(
                 "https://api.linkedin.com/v2/me" +
                 "?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))");
         }
@@ -83,7 +71,7 @@ namespace OAuth2Net
 
         public string GetEmailJson()
         {
-            return NewClient().DownloadString(
+            return NewAuthorizedClient().DownloadString(
                 "https://api.linkedin.com/v2/emailAddress" +
                 "?q=members&projection=(elements*(handle~))");
         }

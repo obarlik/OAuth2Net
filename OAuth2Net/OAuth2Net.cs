@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 
 namespace OAuth2Net
 {
@@ -30,6 +31,8 @@ namespace OAuth2Net
         public string ErrorDescription { get; protected set; }
         public string ErrorUri { get; protected set; }
 
+        public string UserInfoEndpoint { get; protected set; }
+
         Action<OAuth2App> Success;
         Action<OAuth2App> Failure;
 
@@ -45,7 +48,29 @@ namespace OAuth2Net
             string client_secret,
             string redirect_uri,
             string scope = null,
-            Action<OAuth2App> success = null, 
+            Action<OAuth2App> success = null,
+            Action<OAuth2App> failure = null)
+        {
+            Initialize(
+                authorizationUrl,
+                accessTokenUrl,
+                client_id,
+                client_secret,
+                redirect_uri,
+                scope,
+                success,
+                failure);
+        }
+
+
+        void Initialize(
+            string authorizationUrl,
+            string accessTokenUrl,
+            string client_id,
+            string client_secret,
+            string redirect_uri,
+            string scope = null,
+            Action<OAuth2App> success = null,
             Action<OAuth2App> failure = null)
         {
             AuthorizationUrl = authorizationUrl;
@@ -55,13 +80,42 @@ namespace OAuth2Net
             RedirectUri = redirect_uri;
             Scope = scope;
             State = Guid.NewGuid().ToString("N");
+            AccessTokenType = "Bearer";
 
             Success = success;
             Failure = failure;
         }
 
 
-        public string GetAuthorizationUrl(string returnUrl = null)
+        public OAuth2App(
+            string openIdDiscoveryUrl,
+            string client_id,
+            string client_secret,
+            string redirect_uri,
+            string scope = null,
+            Action<OAuth2App> success = null,
+            Action<OAuth2App> failure = null) 
+        {
+            var cli = NewClient("application/json");
+
+            var json = cli.DownloadString(openIdDiscoveryUrl);
+            var data = JObject.Parse(json);
+
+            UserInfoEndpoint = data["userinfo_endpoint"].Value<string>();
+
+            Initialize(
+                data["authorization_endpoint"].Value<string>(),
+                data["token_endpoint"].Value<string>(),
+                client_id,
+                client_secret,
+                redirect_uri,
+                scope,
+                success,
+                failure);
+        }
+
+
+            public string GetAuthorizationUrl(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
 
@@ -71,7 +125,7 @@ namespace OAuth2Net
                   (string.IsNullOrWhiteSpace(authorizationUri.Query) ? "" : "&") +
                   $"response_type=code" +
                   $"&client_id={ClientId}" +
-                  (ClientSecret != null ? $"&client_secret={ClientSecret}" : "") +
+                  //(ClientSecret != null ? $"&client_secret={ClientSecret}" : "") +
                   (!AuthorizationParams.Any() ? "" : $"&{string.Join("&", AuthorizationParams.Select(p => p.Key + "=" + Uri.EscapeDataString(p.Value)))}") +
                   (Scope == null ? "" : $"&scope={Uri.EscapeDataString(Scope)}") +
                   $"&state={State}" +
@@ -157,15 +211,24 @@ namespace OAuth2Net
                 $"&code={AuthorizationCode}" +
                 $"&state={State}");
 
-            AccessToken = Regex.Matches(json, "\"access_token\" *: *\"(.+?)\"")
+            AccessToken = 
+                Regex.Matches(json, "\"access_token\" *: *\"(.+?)\"")
                 .OfType<Match>()
                 .Select(m => m.Groups[1].Value)
                 .FirstOrDefault();
 
-            AccessTokenType = Regex.Matches(json, "\"token_type\" *: *\"(.+?)\"")
-                            .OfType<Match>()
-                            .Select(m => m.Groups[1].Value)
-                            .FirstOrDefault() ?? "bearer";
+            var tokenType = 
+                Regex.Matches(json, "\"token_type\" *: *\"(.+?)\"")
+                .OfType<Match>()
+                .Select(m => m.Groups[1].Value)
+                .FirstOrDefault() ?? "Bearer";
+
+            AccessTokenType = (tokenType?.Length ?? 0) > 0 ?
+                new string(
+                    AccessTokenType
+                    .Select((c, i) => i == 0 ? char.ToUpperInvariant(c) : c)
+                    .ToArray()) :
+                tokenType;
 
             if (AccessToken == null)
             {
@@ -176,6 +239,28 @@ namespace OAuth2Net
             }
 
             Success?.Invoke(this);
+        }
+
+
+        public WebClient NewClient(string accept = "*/*", string agent = null)
+        {
+            var cli = new WebClient();
+
+            if (accept != null)
+                cli.Headers["Accept"] = accept;
+
+            cli.Headers["User-Agent"] = agent ?? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134";
+            cli.Encoding = Encoding.UTF8;
+
+            return cli;
+        }
+
+
+        public WebClient NewAuthorizedClient(string accept = null, string agent = null)
+        {
+            var cli = NewClient(accept);
+            cli.Headers["Authorization"] = $"{AccessTokenType} {AccessToken}";
+            return cli;
         }
     }
 }

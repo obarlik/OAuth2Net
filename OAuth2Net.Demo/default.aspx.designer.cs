@@ -49,6 +49,15 @@ namespace OAuth2Net.Demo {
         protected global::System.Web.UI.WebControls.LinkButton FacebookLoginBtn;
         
         /// <summary>
+        /// GoogleLoginBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton GoogleLoginBtn;
+        
+        /// <summary>
         /// PersonPicture control.
         /// </summary>
         /// <remarks>

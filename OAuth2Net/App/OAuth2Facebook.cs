@@ -28,10 +28,11 @@ namespace OAuth2Net
             client_secret,
             redirect_uri,
             scope,
-            success: api => {
+            success: api =>
+            {
                 var facebook = api as OAuth2Facebook;
 
-                using (var cli = facebook.NewClient())
+                using (var cli = facebook.NewAuthorizedClient("application/json"))
                 {
                     var json = cli.DownloadString($"https://graph.facebook.com/v3.3/me?access_token={facebook.AccessToken}&fields=id,name,email");
                     var data = JObject.Parse(json);
@@ -41,30 +42,17 @@ namespace OAuth2Net
                     facebook.PersonEmail = data["email"].Value<string>();
                 }
 
-                using (var cli = facebook.NewClient())
+                using (var cli = facebook.NewAuthorizedClient("application/json"))
                 {
                     var json = cli.DownloadString($"https://graph.facebook.com/{facebook.PersonId}/picture?type=large&redirect=false");
                     var data = JObject.Parse(json);
 
-                    facebook.PersonPhotoUrl = data["data"]["url"].Value<string>();
+                    facebook.PersonPhotoUrl = data["data"]?["url"].Value<string>();
                 }
 
                 success?.Invoke(facebook);
             })
         {
-        }
-
-
-        public WebClient NewClient(string agent = null)
-        {
-            var cli = new WebClient();
-
-            cli.Headers["Accept"] = "application/json";
-            cli.Headers["User-Agent"] = agent ?? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134";
-            cli.Headers["Authorization"] = $"{AccessTokenType} {AccessToken}";
-            cli.Encoding = Encoding.UTF8;
-
-            return cli;
         }
     }
 }

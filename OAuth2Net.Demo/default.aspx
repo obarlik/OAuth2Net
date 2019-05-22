@@ -16,18 +16,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <asp:LinkButton ID="LinkedInLoginBtn" runat="server" OnClick="LinkedInLoginBtn_Click">LinkedIn</asp:LinkButton></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:LinkButton ID="GithubLoginBtn" runat="server" OnClick="GithubLoginBtn_Click">GitHub</asp:LinkButton></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:LinkButton ID="FacebookLoginBtn" runat="server" OnClick="FacebookLoginBtn_Click">Facebook</asp:LinkButton></td>
-                    </tr>
+                    <tr><td><asp:LinkButton ID="LinkedInLoginBtn" runat="server" OnClick="LinkedInLoginBtn_Click" Text="LinkedIn"/></td></tr>
+                    <tr><td><asp:LinkButton ID="GithubLoginBtn" runat="server" OnClick="GithubLoginBtn_Click" Text="GitHub"/></td></tr>
+                    <tr><td><asp:LinkButton ID="FacebookLoginBtn" runat="server" OnClick="FacebookLoginBtn_Click" Text="Facebook"/></td></tr>
+                    <tr><td><asp:LinkButton ID="GoogleLoginBtn" runat="server" OnClick="GoogleLoginBtn_Click" Text="Google"/></td></tr>
                 </tbody>
             </table>
             <table>

@@ -113,5 +113,30 @@ namespace OAuth2Net.Demo
 
             Response.Redirect(facebook.GetAuthorizationUrl("/"));
         }
+
+        protected void GoogleLoginBtn_Click(object sender, EventArgs e)
+        {
+            var google = new OAuth2Google(
+                "13833862291-comaorjrjsp4vl85am44qkt3b7vqlip2.apps.googleusercontent.com",
+                "wnWzkiapl7aLY7bKMiRjTend",
+                "http://localhost:6625/auth/google/default.aspx",
+                success: api =>
+                {
+                    LoginUser(
+                        "Google-" + api.PersonId,
+                        api.PersonName,
+                        api.PersonEmail,
+                        api.PersonPhotoUrl,
+                        "User");
+
+                    HttpContext.Current.Response.Redirect(api.ReturnUrl);
+                },
+                failure: api =>
+                {
+                    HttpContext.Current.Response.Redirect(api.ReturnUrl);
+                });
+
+            Response.Redirect(google.GetAuthorizationUrl("/"));
+        }
     }
 }
