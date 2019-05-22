@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="default.aspx" />
-    <Content Include="Global.asax" />
     <Content Include="Auth\Facebook\default.aspx" />
     <Content Include="Auth\GitHub\default.aspx" />
     <Content Include="Auth\LinkedIn\default.aspx" />
@@ -82,9 +81,6 @@
     </Compile>
     <Compile Include="default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Auth\Facebook\default.aspx.cs">
       <DependentUpon>default.aspx</DependentUpon>
@@ -118,10 +114,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\OAuth2Net\OAuth2Net.csproj">
       <Project>{57d71d23-a6e8-4b12-912a-3e5a61cdc3fe}</Project>
