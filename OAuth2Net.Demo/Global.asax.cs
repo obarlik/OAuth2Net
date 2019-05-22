@@ -16,20 +16,5 @@ namespace OAuth2Net.Demo
         }
 
 
-        protected void Application_PostAuthenticateRequest(object sender, EventArgs e)
-        {
-            var id = Context?.User?.Identity as FormsIdentity;
-
-            if (id == null || string.IsNullOrWhiteSpace(id.Ticket.UserData))
-                return;
-
-            var claims = JArray.Parse(id.Ticket.UserData);
-
-            foreach(var claim in claims)
-            {
-                id.AddClaim(new Claim(claim["Type"].Value<string>(), claim["Value"].Value<string>()));
-            }
-
-        }
     }
 }

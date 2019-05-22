@@ -73,7 +73,6 @@
     <Content Include="Auth\Facebook\default.aspx" />
     <Content Include="Auth\GitHub\default.aspx" />
     <Content Include="Auth\LinkedIn\default.aspx" />
-    <Content Include="login.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -107,13 +106,6 @@
     </Compile>
     <Compile Include="Auth\LinkedIn\default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="login.aspx.cs">
-      <DependentUpon>login.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="login.aspx.designer.cs">
-      <DependentUpon>login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
