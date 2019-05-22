@@ -23,7 +23,6 @@ LinkedIn v2, GitHub, Facebook v3.3, Google v2</Description>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="NUnit" Version="3.12.0" />
   </ItemGroup>
 
   <ItemGroup>
