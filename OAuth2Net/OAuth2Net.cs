@@ -242,7 +242,7 @@ namespace OAuth2Net
         }
 
 
-        public WebClient NewClient(string accept = "*/*", string agent = null)
+        public WebClient NewClient(string accept = null, string agent = null)
         {
             var cli = new WebClient();
 
@@ -258,7 +258,7 @@ namespace OAuth2Net
 
         public WebClient NewAuthorizedClient(string accept = null, string agent = null)
         {
-            var cli = NewClient(accept);
+            var cli = NewClient(accept, agent);
             cli.Headers["Authorization"] = $"{AccessTokenType} {AccessToken}";
             return cli;
         }
