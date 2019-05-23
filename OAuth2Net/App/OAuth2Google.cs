@@ -31,12 +31,12 @@ namespace OAuth2Net
                     var json = cli.DownloadString(google.UserInfoEndpoint);
                     var data = JObject.Parse(json);
 
-                    google.PersonId = data["sub"].Value<string>();
-                    google.PersonName = data["name"].Value<string>();
-                    google.PersonEmail = data["email"].Value<string>();
-                    google.PersonPhotoUrl = data["picture"].Value<string>();
-                    google.PersonProfileUrl = data["profile"].Value<string>();
-                    google.PersonLocale = data["locale"].Value<string>();
+                    google.PersonId = data["sub"]?.Value<string>();
+                    google.PersonName = data["name"]?.Value<string>();
+                    google.PersonEmail = data["email"]?.Value<string>();
+                    google.PersonPhotoUrl = data["picture"]?.Value<string>();
+                    google.PersonProfileUrl = data["profile"]?.Value<string>();
+                    google.PersonLocale = data["locale"]?.Value<string>();
                 }
 
                 success?.Invoke(google);

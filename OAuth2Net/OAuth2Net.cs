@@ -111,11 +111,11 @@ namespace OAuth2Net
             var json = cli.DownloadString(openIdDiscoveryUrl);
             var data = JObject.Parse(json);
 
-            UserInfoEndpoint = data["userinfo_endpoint"].Value<string>();
+            UserInfoEndpoint = data["userinfo_endpoint"]?.Value<string>();
 
             Initialize(
-                data["authorization_endpoint"].Value<string>(),
-                data["token_endpoint"].Value<string>(),
+                data["authorization_endpoint"]?.Value<string>(),
+                data["token_endpoint"]?.Value<string>(),
                 client_id,
                 client_secret,
                 redirect_uri,
@@ -125,7 +125,7 @@ namespace OAuth2Net
         }
 
 
-            public string GetAuthorizationUrl(string returnUrl = null)
+        public string GetAuthorizationUrl(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
 

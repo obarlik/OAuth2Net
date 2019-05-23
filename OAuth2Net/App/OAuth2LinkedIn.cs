@@ -34,19 +34,19 @@ namespace OAuth2Net
 
                         var profileJson = JObject.Parse(json);
                         
-                        linkedInApi.PersonId = profileJson["id"].Value<string>();
+                        linkedInApi.PersonId = profileJson["id"]?.Value<string>();
 
                         linkedInApi.PersonName =
-                            profileJson["firstName"]?["localized"].First?.First.Value<string>()
-                            + " " + profileJson["lastName"]?["localized"]?.First?.First.Value<string>();
+                            profileJson["firstName"]?["localized"]?.First?.First?.Value<string>()
+                            + " " + profileJson["lastName"]?["localized"]?.First?.First?.Value<string>();
 
                         linkedInApi.PersonPhotoUrl =
-                           profileJson["profilePicture"]?["displayImage~"]?["elements"]
+                           profileJson["profilePicture"]?["displayImage~"]?["elements"]?
                            .Select(el =>
                                new
                                {
-                                   width = el["data"]?["com.linkedin.digitalmedia.mediaartifact.StillImage"]?["storageSize"]?["width"].Value<int>(),
-                                   url = el["identifiers"].First?["identifier"].Value<string>()
+                                   width = el["data"]?["com.linkedin.digitalmedia.mediaartifact.StillImage"]?["storageSize"]?["width"]?.Value<int>(),
+                                   url = el["identifiers"]?.First?["identifier"]?.Value<string>()
                                })
                                .OrderByDescending(el => el.width)
                                .Select(el => el.url)
@@ -62,7 +62,7 @@ namespace OAuth2Net
                         var emailJson = JObject.Parse(json);
 
                         linkedInApi.PersonEmail =
-                           emailJson["elements"].First?["handle~"]?["emailAddress"].Value<string>();
+                           emailJson["elements"].First?["handle~"]?["emailAddress"]?.Value<string>();
                     }
 
 
