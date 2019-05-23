@@ -22,9 +22,9 @@ namespace OAuth2Net
                 client_secret,
                 redirect_uri,
                 scope,
-                success_api =>
+                success: api =>
                 {
-                    var linkedInApi = success_api as OAuth2LinkedIn;
+                    var linkedInApi = api as OAuth2LinkedIn;
 
                     using (var cli = linkedInApi.NewAuthorizedClient())
                     {
@@ -68,7 +68,7 @@ namespace OAuth2Net
 
                     success(linkedInApi);
                 },
-                failure_api => failure((OAuth2LinkedIn)failure_api))
+                failure: api => failure((OAuth2LinkedIn)api))
         {
         }
 

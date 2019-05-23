@@ -21,9 +21,9 @@ namespace OAuth2Net
                 client_secret,
                 redirect_uri, 
                 null,
-                success_api =>
+                success: api =>
                 {
-                    var gitHubApi = success_api as OAuth2GitHub;
+                    var gitHubApi = api as OAuth2GitHub;
 
                     using (var cli = gitHubApi.NewAuthorizedClient("application/vnd.github.machine-man-preview+json"))
                     {
@@ -59,9 +59,9 @@ namespace OAuth2Net
                         }
                                        
 
-                    success((OAuth2GitHub)success_api);
+                    success((OAuth2GitHub)api);
                 },
-                failure_api => failure((OAuth2GitHub)failure_api))
+                failure: api => failure((OAuth2GitHub)api))
         {
         }
     }

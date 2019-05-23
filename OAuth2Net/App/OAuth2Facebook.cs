@@ -45,7 +45,8 @@ namespace OAuth2Net
                 }
 
                 success?.Invoke(facebook);
-            })
+            },
+            failure: api => failure((OAuth2Facebook)api))
         {
         }
     }

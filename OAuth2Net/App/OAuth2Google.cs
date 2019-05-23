@@ -40,7 +40,8 @@ namespace OAuth2Net
                 }
 
                 success?.Invoke(google);
-            })
+            },
+            failure: api => failure((OAuth2Google)api))
         {
         }
 
