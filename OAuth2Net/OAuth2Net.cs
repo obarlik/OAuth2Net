@@ -125,7 +125,7 @@ namespace OAuth2Net
         }
 
 
-            public string GetAuthorizationUrl(string returnUrl = null)
+        public string GetAuthorizationUrl(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
 
