@@ -9,7 +9,7 @@ LinkedIn v2, GitHub, Facebook v3.3, Google v2</Description>
     <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryUrl>https://github.com/obarlik/OAuth2Net</RepositoryUrl>
     <RepositoryType>GitHub Public Repository</RepositoryType>
-    <PackageTags>github, linkedin, oauth, authentication, authorization, signup, signin, login, facebook, google</PackageTags>
+    <PackageTags>oauth, github, linkedin, facebook, google, authentication, login, net, netstandard, netcore</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
