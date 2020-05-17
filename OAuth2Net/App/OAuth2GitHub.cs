@@ -19,7 +19,7 @@ namespace OAuth2Net
                 client_id,
                 client_secret,
                 redirect_uri,
-                null)
+                "read:user user:email")
         {
         }
 
@@ -39,8 +39,13 @@ namespace OAuth2Net
                 state.PersonProfileUrl = json["html_url"]?.Value<string>();
                 state.PersonLocation = json["location"]?.Value<string>();
                 state.PersonInfo = json["bio"]?.Value<string>();
+            }
 
-                if (string.IsNullOrWhiteSpace(state.PersonEmail))
+
+            if (string.IsNullOrWhiteSpace(state.PersonEmail))
+                using (var cli = NewAuthorizedClient(state.AccessTokenType, state.AccessToken,
+                                                     accept: "application/vnd.github.machine-man-preview+json"))
+                {
                     try
                     {
                         var text = cli.DownloadString("https://api.github.com/user/emails");
@@ -56,7 +61,7 @@ namespace OAuth2Net
                     {
                         // tried
                     }
-            }
+                }
         }
     }
 }
