@@ -16,6 +16,7 @@ namespace OAuth2Net
             Action<OAuth2LinkedIn> failure,
             string scope = "r_liteprofile r_emailaddress")
             : base(
+                "LinkedIn",
                 "https://www.linkedin.com/oauth/v2/authorization",
                 "https://www.linkedin.com/oauth/v2/accessToken",
                 client_id,

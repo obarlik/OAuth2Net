@@ -16,6 +16,7 @@ namespace OAuth2Net
                 Action<OAuth2Facebook> success,
                 Action<OAuth2Facebook> failure,
                 string scope = "public_profile,email") : base(
+            "Facebook",
             "https://www.facebook.com/v3.3/dialog/oauth",
             "https://graph.facebook.com/v3.3/oauth/access_token",
             client_id,

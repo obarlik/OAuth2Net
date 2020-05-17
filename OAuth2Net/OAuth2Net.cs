@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json.Linq;
 
 namespace OAuth2Net
 {
-    public class OAuth2App
+    public abstract class OAuth2App
     {
         string ClientId;
         string ClientSecret;
@@ -17,6 +16,8 @@ namespace OAuth2Net
         string AccessTokenUrl;
         string RedirectUri;
         string Scope;
+
+        public readonly string ProviderName;
 
         public string PersonId { get; protected set; }
         public string PersonName { get; protected set; }
@@ -43,15 +44,15 @@ namespace OAuth2Net
 
         public string UserInfoEndpoint { get; protected set; }
 
+        public static IOAuth2NetStateProvider StateProvider { get; set;  } = new OAuth2NetStaticStateProvider();
+
         Action<OAuth2App> Success;
         Action<OAuth2App> Failure;
 
         protected Dictionary<string, string> AuthorizationParams = new Dictionary<string, string>();
 
-        static Dictionary<string, OAuth2App> Authentications = new Dictionary<string, OAuth2App>();
-
-
         public OAuth2App(
+            string providerName,
             string authorizationUrl,
             string accessTokenUrl,
             string client_id,
@@ -61,6 +62,7 @@ namespace OAuth2Net
             Action<OAuth2App> success = null,
             Action<OAuth2App> failure = null)
         {
+            ProviderName = providerName;
             Initialize(
                 authorizationUrl,
                 accessTokenUrl,
@@ -98,6 +100,7 @@ namespace OAuth2Net
 
 
         public OAuth2App(
+            string providerName,
             string openIdDiscoveryUrl,
             string client_id,
             string client_secret,
@@ -106,6 +109,8 @@ namespace OAuth2Net
             Action<OAuth2App> success = null,
             Action<OAuth2App> failure = null) 
         {
+            ProviderName = providerName;
+
             var cli = NewClient("application/json");
 
             var json = cli.DownloadString(openIdDiscoveryUrl);
@@ -147,35 +152,14 @@ namespace OAuth2Net
         }
 
 
-        static void AddAuthentication(OAuth2App api)
-        {
-            if (!Authentications.ContainsKey(api.State))
-                lock (Authentications)
-                {
-                    if (!Authentications.ContainsKey(api.State))
-                        Authentications[api.State] = api;
-                }
-        }
+        void AddAuthentication(OAuth2App api)
+            => StateProvider.SetState(api.State, api);
+        
 
 
         static OAuth2App FindApi(string state)
-        {
-            if (string.IsNullOrWhiteSpace(state))
-                return null;
-
-            if (Authentications.ContainsKey(state))
-                lock (Authentications)
-                {
-                    if (Authentications.TryGetValue(state, out OAuth2App api))
-                    {
-                        Authentications.Remove(api.State);
-                        return api;
-                    }
-                }
-
-            return null;
-        }
-
+            => (OAuth2App)StateProvider.RemoveState(state);
+        
 
         public static void Callback(
             string code,
@@ -184,11 +168,11 @@ namespace OAuth2Net
             string error_description = null,
             string error_uri = null)
         {
-            FindApi(state)?._Callback(code, error, error_description, error_uri);
+            FindApi(state)?.CallbackInternal(code, error, error_description, error_uri);
         }
 
 
-        void _Callback(
+        void CallbackInternal(
             string code,
             string error,
             string error_description = null,

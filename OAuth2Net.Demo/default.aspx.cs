@@ -92,8 +92,8 @@ namespace OAuth2Net.Demo
         protected void FacebookLoginBtn_Click(object sender, EventArgs e)
         {
             var facebook = new OAuth2Facebook(
-                "2293070497624844",
-                "c530b7a2614a93b328f0c170c6fcd001",
+                "2825308727576238",
+                "ec0ef89c230451f91a510e00f217c1a2",
                 "http://localhost:6625/auth/facebook/default.aspx",
                 success: api =>
                 {

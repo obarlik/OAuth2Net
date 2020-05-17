@@ -18,7 +18,10 @@ LinkedIn v2, GitHub, Facebook v3.3, Google v2</Description>
     <PackageIconUrl>https://github.com/obarlik/OAuth2Net/raw/master/oauthicon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/obarlik/OAuth2Net</PackageProjectUrl>
     <Authors>obarlik</Authors>
-    <Version>1.0.6.3</Version>
+    <Version>1.0.7.4</Version>
+    <PackageReleaseNotes>Added OAuth2App.StateProvider static property for managing states on external storage systems.</PackageReleaseNotes>
+    <AssemblyVersion>1.0.7.4</AssemblyVersion>
+    <FileVersion>1.0.7.4</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

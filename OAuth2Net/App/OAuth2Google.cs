@@ -18,6 +18,7 @@ namespace OAuth2Net
                 Action<OAuth2Google> failure,
                 string scope = "openid profile email") 
             : base(
+            "Google",
             openIdDiscoveryUrl: "https://accounts.google.com/.well-known/openid-configuration",
             client_id,
             client_secret,

@@ -15,6 +15,7 @@ namespace OAuth2Net
             Action<OAuth2GitHub> success, 
             Action<OAuth2GitHub> failure = null) 
             : base(
+                "GitHub",
                 "https://github.com/login/oauth/authorize",
                 "https://github.com/login/oauth/access_token", 
                 client_id, 
