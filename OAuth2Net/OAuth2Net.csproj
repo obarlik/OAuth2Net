@@ -19,7 +19,9 @@ LinkedIn v2, GitHub, Facebook v3.3, Google v2</Description>
     <PackageProjectUrl>https://github.com/obarlik/OAuth2Net</PackageProjectUrl>
     <Authors>obarlik</Authors>
     <Version>1.1.1.5</Version>
-    <PackageReleaseNotes>Added OAuth2App.StateProvider static property for managing states on external storage systems.</PackageReleaseNotes>
+    <PackageReleaseNotes>Breaking changes:
+- Success, failure handlers are moved to callback method.
+- OAuth2NetState class added for scalability.</PackageReleaseNotes>
     <AssemblyVersion>1.1.1.5</AssemblyVersion>
     <FileVersion>1.1.1.5</FileVersion>
   </PropertyGroup>
