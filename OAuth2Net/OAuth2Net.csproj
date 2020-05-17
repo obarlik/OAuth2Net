@@ -13,9 +13,9 @@ LinkedIn v2, GitHub, Facebook v3.3, Google v2</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Product>Codechu's OAuth2Net Authentication Library</Product>
-    <PackageIconUrl>https://github.com/obarlik/OAuth2Net/raw/master/oauthicon.png</PackageIconUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Product>Codechu's OAuth2Net Authentication Library</Product>    
+    <PackageIcon>oauthicon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/obarlik/OAuth2Net</PackageProjectUrl>
     <Authors>obarlik</Authors>
     <Version>1.0.7.4</Version>
@@ -29,10 +29,8 @@ LinkedIn v2, GitHub, Facebook v3.3, Google v2</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="..\LICENSE" Pack="True" PackagePath=""/>
+    <None Include="oauthicon.png" Pack="True" PackagePath=""/>
   </ItemGroup>
 
 </Project>
