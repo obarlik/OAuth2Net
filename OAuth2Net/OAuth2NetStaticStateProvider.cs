@@ -4,30 +4,36 @@ using System.Text;
 
 namespace OAuth2Net
 {
-    public class OAuth2NetStaticStateProvider : IOAuth2NetStateProvider, IKeyValue<string, OAuth2App>
+    internal class OAuth2NetStaticStateProvider : IOAuth2NetStateProvider
     {
-        static readonly Dictionary<string, OAuth2App> Authentications = new Dictionary<string, OAuth2App>();
+        static readonly Dictionary<string, OAuth2NetState> Authentications = new Dictionary<string, OAuth2NetState>();
 
-
-        public OAuth2App this[string state]
+        public OAuth2NetState this[string state]
         {
-            get => (OAuth2App)GetState(state);
-            set => SetState(state, value);
+            get
+            {
+                if (string.IsNullOrWhiteSpace(state))
+                    return null;
+
+                return Authentications.TryGetValue(state, out var result)
+                    ? result
+                    : null;
+            }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(state))
+                    return;
+
+                lock (Authentications)
+                {
+                    Authentications[state] = value;
+                }
+            }
         }
-
-        public object GetState(string state)
-        {
-            if (string.IsNullOrWhiteSpace(state))
-                return null;
-
-            return Authentications.TryGetValue(state, out var result) 
-                ? result 
-                : null;
-        }
-
+                
         public object RemoveState(string state)
         {
-            var result = GetState(state);
+            var result = this[state];
 
             if (result != null)
                 lock (Authentications)
@@ -38,15 +44,5 @@ namespace OAuth2Net
             return result;
         }
 
-        public void SetState(string state, object stateValue)
-        {
-            if (string.IsNullOrWhiteSpace(state))
-                return;
-
-            lock (Authentications)
-            {
-                Authentications[state] = (OAuth2App)stateValue;
-            }
-        }
     }
 }

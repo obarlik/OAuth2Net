@@ -13,8 +13,6 @@ namespace OAuth2Net
                 string client_id,
                 string client_secret,
                 string redirect_uri,
-                Action<OAuth2Facebook> success,
-                Action<OAuth2Facebook> failure,
                 string scope = "public_profile,email") : base(
             "Facebook",
             "https://www.facebook.com/v3.3/dialog/oauth",
@@ -22,33 +20,27 @@ namespace OAuth2Net
             client_id,
             client_secret,
             redirect_uri,
-            scope,
-            success: api =>
-            {
-                var facebook = api as OAuth2Facebook;
-
-                using (var cli = facebook.NewAuthorizedClient("application/json"))
-                {
-                    var json = cli.DownloadString($"https://graph.facebook.com/v3.3/me?access_token={facebook.AccessToken}&fields=id,name,email");
-                    var data = JObject.Parse(json);
-
-                    facebook.PersonId = data["id"]?.Value<string>();
-                    facebook.PersonName = data["name"]?.Value<string>();
-                    facebook.PersonEmail = data["email"]?.Value<string>();
-                }
-
-                using (var cli = facebook.NewAuthorizedClient("application/json"))
-                {
-                    var json = cli.DownloadString($"https://graph.facebook.com/{facebook.PersonId}/picture?type=large&redirect=false");
-                    var data = JObject.Parse(json);
-
-                    facebook.PersonPhotoUrl = data["data"]?["url"]?.Value<string>();
-                }
-
-                success?.Invoke(facebook);
-            },
-            failure: api => failure((OAuth2Facebook)api))
+            scope)
         {
+        }
+
+        public static void SuccessCallback(OAuth2NetState state)
+        {
+            using (var cli = NewAuthorizedClient(state.AccessTokenType, state.AccessToken,
+                                                 accept: "application/json"))
+            {
+                var json = cli.DownloadString($"https://graph.facebook.com/v3.3/me?access_token={state.AccessToken}&fields=id,name,email");
+                var data = JObject.Parse(json);
+
+                state.PersonId = data["id"]?.Value<string>();
+                state.PersonName = data["name"]?.Value<string>();
+                state.PersonEmail = data["email"]?.Value<string>();
+
+                json = cli.DownloadString($"https://graph.facebook.com/{state.PersonId}/picture?type=large&redirect=false");
+                data = JObject.Parse(json);
+
+                state.PersonPhotoUrl = data["data"]?["url"]?.Value<string>();
+            }
         }
     }
 }

@@ -5,12 +5,8 @@ using System.Text;
 
 namespace OAuth2Net
 {
-    public interface IOAuth2NetStateProvider
+    public interface IOAuth2NetStateProvider : IKeyValue<string, OAuth2NetState>
     {
-        object GetState(string state);
-
-        void SetState(string state, object stateValue);
-
         object RemoveState(string state);
     }
 }

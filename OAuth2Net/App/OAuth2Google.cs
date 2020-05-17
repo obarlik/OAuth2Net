@@ -14,8 +14,6 @@ namespace OAuth2Net
                 string client_id,
                 string client_secret,
                 string redirect_uri,
-                Action<OAuth2Google> success,
-                Action<OAuth2Google> failure,
                 string scope = "openid profile email") 
             : base(
             "Google",
@@ -23,28 +21,26 @@ namespace OAuth2Net
             client_id,
             client_secret,
             redirect_uri,
-            scope,
-            success: api => {
-                var google = api as OAuth2Google;
-                
-                using (var cli = google.NewAuthorizedClient("application/json"))
-                {
-                    var json = cli.DownloadString(google.UserInfoEndpoint);
-                    var data = JObject.Parse(json);
-
-                    google.PersonId = data["sub"]?.Value<string>();
-                    google.PersonName = data["name"]?.Value<string>();
-                    google.PersonEmail = data["email"]?.Value<string>();
-                    google.PersonPhotoUrl = data["picture"]?.Value<string>();
-                    google.PersonProfileUrl = data["profile"]?.Value<string>();
-                    google.PersonLocale = data["locale"]?.Value<string>();
-                }
-
-                success?.Invoke(google);
-            },
-            failure: api => failure((OAuth2Google)api))
+            scope)
         {
         }
 
+
+        public static void SuccessCallback(OAuth2NetState state)
+        {
+            using (var cli = NewAuthorizedClient(state.AccessTokenType, state.AccessToken,
+                                                 accept: "application/json"))
+            {
+                var json = cli.DownloadString(state.UserInfoEndpoint);
+                var data = JObject.Parse(json);
+
+                state.PersonId = data["sub"]?.Value<string>();
+                state.PersonName = data["name"]?.Value<string>();
+                state.PersonEmail = data["email"]?.Value<string>();
+                state.PersonPhotoUrl = data["picture"]?.Value<string>();
+                state.PersonProfileUrl = data["profile"]?.Value<string>();
+                state.PersonLocale = data["locale"]?.Value<string>();
+            }
+        }
     }
 }

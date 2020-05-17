@@ -12,8 +12,6 @@ namespace OAuth2Net
             string client_id,
             string client_secret,
             string redirect_uri,
-            Action<OAuth2LinkedIn> success,
-            Action<OAuth2LinkedIn> failure,
             string scope = "r_liteprofile r_emailaddress")
             : base(
                 "LinkedIn",
@@ -22,55 +20,48 @@ namespace OAuth2Net
                 client_id,
                 client_secret,
                 redirect_uri,
-                scope,
-                success: api =>
-                {
-                    var linkedInApi = api as OAuth2LinkedIn;
-
-                    using (var cli = linkedInApi.NewAuthorizedClient())
-                    {
-                        var json = cli.DownloadString(
-                            "https://api.linkedin.com/v2/me" +
-                            "?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))");
-
-                        var profileJson = JObject.Parse(json);
-                        
-                        linkedInApi.PersonId = profileJson["id"]?.Value<string>();
-
-                        linkedInApi.PersonName =
-                            profileJson["firstName"]?["localized"]?.First?.First?.Value<string>()
-                            + " " + profileJson["lastName"]?["localized"]?.First?.First?.Value<string>();
-
-                        linkedInApi.PersonPhotoUrl =
-                           profileJson["profilePicture"]?["displayImage~"]?["elements"]?
-                           .Select(el =>
-                               new
-                               {
-                                   width = el["data"]?["com.linkedin.digitalmedia.mediaartifact.StillImage"]?["storageSize"]?["width"]?.Value<int>(),
-                                   url = el["identifiers"]?.First?["identifier"]?.Value<string>()
-                               })
-                               .OrderByDescending(el => el.width)
-                               .Select(el => el.url)
-                               .FirstOrDefault();
-                    }
-
-                    using (var cli = linkedInApi.NewAuthorizedClient())
-                    {
-                        var json = cli.DownloadString(
-                            "https://api.linkedin.com/v2/emailAddress" +
-                            "?q=members&projection=(elements*(handle~))");
-
-                        var emailJson = JObject.Parse(json);
-
-                        linkedInApi.PersonEmail =
-                           emailJson["elements"].First?["handle~"]?["emailAddress"]?.Value<string>();
-                    }
-
-
-                    success(linkedInApi);
-                },
-                failure: api => failure((OAuth2LinkedIn)api))
+                scope)
         {
+        }
+
+
+        public static void SuccessCallback(OAuth2NetState state)
+        {
+            using (var cli = NewAuthorizedClient(state.AccessTokenType, state.AccessToken))
+            {
+                var json = cli.DownloadString(
+                    "https://api.linkedin.com/v2/me" +
+                    "?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))");
+
+                var profileJson = JObject.Parse(json);
+
+                state.PersonId = profileJson["id"]?.Value<string>();
+
+                state.PersonName =
+                    profileJson["firstName"]?["localized"]?.First?.First?.Value<string>()
+                    + " " + profileJson["lastName"]?["localized"]?.First?.First?.Value<string>();
+
+                state.PersonPhotoUrl =
+                   profileJson["profilePicture"]?["displayImage~"]?["elements"]?
+                   .Select(el =>
+                       new
+                       {
+                           width = el["data"]?["com.linkedin.digitalmedia.mediaartifact.StillImage"]?["storageSize"]?["width"]?.Value<int>(),
+                           url = el["identifiers"]?.First?["identifier"]?.Value<string>()
+                       })
+                       .OrderByDescending(el => el.width)
+                       .Select(el => el.url)
+                       .FirstOrDefault();
+            
+                json = cli.DownloadString(
+                    "https://api.linkedin.com/v2/emailAddress" +
+                    "?q=members&projection=(elements*(handle~))");
+
+                var emailJson = JObject.Parse(json);
+
+                state.PersonEmail =
+                   emailJson["elements"].First?["handle~"]?["emailAddress"]?.Value<string>();
+            }
         }
 
     }

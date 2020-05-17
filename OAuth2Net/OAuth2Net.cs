@@ -10,46 +10,12 @@ namespace OAuth2Net
 {
     public abstract class OAuth2App
     {
-        string ClientId;
-        string ClientSecret;
-        string AuthorizationUrl;
-        string AccessTokenUrl;
-        string RedirectUri;
-        string Scope;
-
-        public readonly string ProviderName;
-
-        public string PersonId { get; protected set; }
-        public string PersonName { get; protected set; }
-        public string PersonEmail { get; protected set; }
-        public string PersonPhotoUrl { get; protected set; }
-        public string PersonProfileUrl { get; protected set; }
-        public string PersonLocation { get; protected set; }
-        public string PersonInfo { get; protected set; }
-        public string PersonLocale { get; protected set; }
-
-
-        public string ReturnUrl { get; protected set; }
-
-        public string State;
-
-        public string AuthorizationCode;
-
-        public string AccessToken { get; protected set; }
-        public string AccessTokenType { get; protected set; }
-
-        public string Error { get; protected set; }
-        public string ErrorDescription { get; protected set; }
-        public string ErrorUri { get; protected set; }
-
-        public string UserInfoEndpoint { get; protected set; }
-
-        public static IOAuth2NetStateProvider StateProvider { get; set;  } = new OAuth2NetStaticStateProvider();
-
-        Action<OAuth2App> Success;
-        Action<OAuth2App> Failure;
+        public static IOAuth2NetStateProvider StateProvider { get; set; }
+            = new OAuth2NetStaticStateProvider();
 
         protected Dictionary<string, string> AuthorizationParams = new Dictionary<string, string>();
+
+        public OAuth2NetState State;
 
         public OAuth2App(
             string providerName,
@@ -58,44 +24,46 @@ namespace OAuth2Net
             string client_id,
             string client_secret,
             string redirect_uri,
-            string scope = null,
-            Action<OAuth2App> success = null,
-            Action<OAuth2App> failure = null)
+            string scope = null)
         {
-            ProviderName = providerName;
             Initialize(
+                providerName,
                 authorizationUrl,
                 accessTokenUrl,
                 client_id,
                 client_secret,
                 redirect_uri,
-                scope,
-                success,
-                failure);
+                scope);
         }
 
 
         void Initialize(
+            string providerName,
             string authorizationUrl,
             string accessTokenUrl,
             string client_id,
             string client_secret,
             string redirect_uri,
             string scope = null,
-            Action<OAuth2App> success = null,
-            Action<OAuth2App> failure = null)
+            string userInfoEndpoint = null,
+            string openIdDiscoveryUrl = null)
         {
-            AuthorizationUrl = authorizationUrl;
-            AccessTokenUrl = accessTokenUrl;
-            ClientId = client_id;
-            ClientSecret = client_secret;
-            RedirectUri = redirect_uri;
-            Scope = scope;
-            State = Guid.NewGuid().ToString("N");
-            AccessTokenType = "Bearer";
-
-            Success = success;
-            Failure = failure;
+            State = new OAuth2NetState
+            {
+                ProviderName = providerName,
+                StateId = providerName + "_" + Guid.NewGuid().ToString("N"),
+                AuthorizationUrl = authorizationUrl,
+                AccessTokenUrl = accessTokenUrl,
+                ClientId = client_id,
+                ClientSecret = client_secret,
+                RedirectUri = redirect_uri,
+                Scope = scope,
+                AuthorizationParams = AuthorizationParams.Any()
+                    ? string.Join("&", AuthorizationParams.Select(p => p.Key + "=" + Uri.EscapeDataString(p.Value)))
+                    : null,
+                UserInfoEndpoint = userInfoEndpoint,
+                OpenIdDiscoveryUrl = openIdDiscoveryUrl
+            };
         }
 
 
@@ -105,89 +73,74 @@ namespace OAuth2Net
             string client_id,
             string client_secret,
             string redirect_uri,
-            string scope = null,
-            Action<OAuth2App> success = null,
-            Action<OAuth2App> failure = null) 
-        {
-            ProviderName = providerName;
+            string scope = null) 
+        {   
+            using (var cli = NewClient("application/json"))
+            {
+                var json = cli.DownloadString(openIdDiscoveryUrl);
+                var data = JObject.Parse(json);
 
-            var cli = NewClient("application/json");
-
-            var json = cli.DownloadString(openIdDiscoveryUrl);
-            var data = JObject.Parse(json);
-
-            UserInfoEndpoint = data["userinfo_endpoint"]?.Value<string>();
-
-            Initialize(
-                data["authorization_endpoint"]?.Value<string>(),
-                data["token_endpoint"]?.Value<string>(),
-                client_id,
-                client_secret,
-                redirect_uri,
-                scope,
-                success,
-                failure);
+                Initialize(
+                    providerName,
+                    data["authorization_endpoint"]?.Value<string>(),
+                    data["token_endpoint"]?.Value<string>(),
+                    client_id,
+                    client_secret,
+                    redirect_uri,
+                    scope,
+                    data["userinfo_endpoint"]?.Value<string>(),
+                    openIdDiscoveryUrl);
+            }        
         }
 
 
         public string GetAuthorizationUrl(string returnUrl = null)
         {
-            ReturnUrl = returnUrl;
+            var state = State.Clone();
 
-            var authorizationUri = new UriBuilder(AuthorizationUrl);
+            state.ReturnUrl = returnUrl;
+
+            var authorizationUri = new UriBuilder(State.AuthorizationUrl);
 
             authorizationUri.Query +=
                   (string.IsNullOrWhiteSpace(authorizationUri.Query) ? "" : "&") +
                   $"response_type=code" +
-                  $"&client_id={ClientId}" +
+                  $"&client_id={State.ClientId}" +
                   //(ClientSecret != null ? $"&client_secret={ClientSecret}" : "") +
-                  (!AuthorizationParams.Any() ? "" : $"&{string.Join("&", AuthorizationParams.Select(p => p.Key + "=" + Uri.EscapeDataString(p.Value)))}") +
-                  (Scope == null ? "" : $"&scope={Uri.EscapeDataString(Scope)}") +
-                  $"&state={State}" +
-                  (RedirectUri == null ? "" : $"&redirect_uri={Uri.EscapeDataString(RedirectUri)}");
+                  (State.AuthorizationParams != null ? $"&{State.AuthorizationParams}" : "") +
+                  (State.Scope == null ? "" : $"&scope={Uri.EscapeDataString(State.Scope)}") +
+                  $"&state={State.StateId}" +
+                  (State.RedirectUri == null ? "" : $"&redirect_uri={Uri.EscapeDataString(State.RedirectUri)}");
 
-            AddAuthentication(this);
+            StateProvider[state.StateId] = state;
 
             return authorizationUri.Uri.AbsoluteUri;
         }
 
-
-        void AddAuthentication(OAuth2App api)
-            => StateProvider.SetState(api.State, api);
-        
-
-
-        static OAuth2App FindApi(string state)
-            => (OAuth2App)StateProvider.RemoveState(state);
-        
 
         public static void Callback(
             string code,
             string error,
             string state = null,
             string error_description = null,
-            string error_uri = null)
+            string error_uri = null,
+            Action<OAuth2NetState> success = null,
+            Action<OAuth2NetState> failure = null)
         {
-            FindApi(state)?.CallbackInternal(code, error, error_description, error_uri);
-        }
+            var stateValues = StateProvider[state];
 
-
-        void CallbackInternal(
-            string code,
-            string error,
-            string error_description = null,
-            string error_uri = null)
-        {
             if (!string.IsNullOrWhiteSpace(error))
             {
-                Error = error;
-                ErrorDescription = error_description;
-                ErrorUri = error_uri;
-                Failure?.Invoke(this);
+                stateValues.Result = "failure";
+                stateValues.Error = error;
+                stateValues.ErrorDescription = error_description;
+                stateValues.ErrorUri = error_uri;
+
+                failure?.Invoke(stateValues);
                 return;
             }
 
-            AuthorizationCode = code;
+            stateValues.AuthorizationCode = code;
 
             var cli = new WebClient();
 
@@ -196,16 +149,16 @@ namespace OAuth2Net
             cli.Headers["Accept"] = "application/json";
 
             var json = cli.UploadString(
-                AccessTokenUrl,
-                $"client_id={ClientId}" +
-                (ClientSecret != null ? $"&client_secret={ClientSecret}" : "") +
-                (!AuthorizationParams.Any() ? "" : $"&{string.Join("&", AuthorizationParams.Select(p => p.Key + "=" + Uri.EscapeDataString(p.Value)))}") +
+                stateValues.AccessTokenUrl,
+                $"client_id={stateValues.ClientId}" +
+                (stateValues.ClientSecret != null ? $"&client_secret={stateValues.ClientSecret}" : "") +
+                (stateValues.AuthorizationParams != null ? $"&{stateValues.AuthorizationParams}" : "") +
                 $"&grant_type=authorization_code" +
-                $"&redirect_uri={Uri.EscapeDataString(RedirectUri)}" +
-                $"&code={AuthorizationCode}" +
-                $"&state={State}");
+                $"&redirect_uri={Uri.EscapeDataString(stateValues.RedirectUri)}" +
+                $"&code={stateValues.AuthorizationCode}" +
+                $"&state={state}");
 
-            AccessToken = 
+            var token =
                 Regex.Matches(json, "\"access_token\" *: *\"(.+?)\"")
                 .OfType<Match>()
                 .Select(m => m.Groups[1].Value)
@@ -217,26 +170,33 @@ namespace OAuth2Net
                 .Select(m => m.Groups[1].Value)
                 .FirstOrDefault() ?? "Bearer";
 
-            AccessTokenType = (tokenType?.Length ?? 0) > 0 ?
+            stateValues.AccessTokenType = (tokenType?.Length ?? 0) > 0 ?
                 new string(
-                    AccessTokenType
+                    tokenType
                     .Select((c, i) => i == 0 ? char.ToUpperInvariant(c) : c)
                     .ToArray()) :
                 tokenType;
 
-            if (AccessToken == null)
+            if (token == null)
             {
-                Error = "TokenError";
-                ErrorDescription = "Token retrieval failure!";
-                Failure?.Invoke(this);
+                error = "TokenError";
+                error_description = "Token retrieval failure!";
+
+                stateValues.Result = "failure";
+                stateValues.Error = error;
+                stateValues.ErrorDescription = error_description;
+                
+                failure?.Invoke(stateValues);
                 return;
             }
 
-            Success?.Invoke(this);
+            stateValues.AccessToken = token;
+
+            success?.Invoke(stateValues);
         }
 
 
-        public WebClient NewClient(string accept = null, string agent = null)
+        public static WebClient NewClient(string accept = null, string agent = null)
         {
             var cli = new WebClient();
 
@@ -250,10 +210,10 @@ namespace OAuth2Net
         }
 
 
-        public WebClient NewAuthorizedClient(string accept = null, string agent = null)
+        public static WebClient NewAuthorizedClient(string accessTokenType, string accessToken, string accept = null, string agent = null)
         {
             var cli = NewClient(accept, agent);
-            cli.Headers["Authorization"] = $"{AccessTokenType} {AccessToken}";
+            cli.Headers["Authorization"] = $"{accessTokenType} {accessToken}";
             return cli;
         }
     }

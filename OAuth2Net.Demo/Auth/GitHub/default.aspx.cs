@@ -11,12 +11,26 @@ namespace OAuth2Net.Demo.OAuth.GitHub
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            OAuth2App.Callback(
+            OAuth2GitHub.Callback(
                 Request.Params["code"],
                 Request.Params["error"],
                 Request.Params["state"],
                 Request.Params["error_description"],
-                Request.Params["error_uri"]);
+                Request.Params["error_uri"],
+                success: state =>
+                {
+                    OAuth2GitHub.SuccessCallback(state);
+
+                    LoginHelper.LoginUser(
+                        state.ProviderName + "-" + state.PersonId,
+                        state.PersonName,
+                        state.PersonEmail,
+                        state.PersonPhotoUrl,
+                        "User");
+
+                    HttpContext.Current.Response.Redirect(state.ReturnUrl);
+                },
+                failure: state => HttpContext.Current.Response.Redirect(state.ReturnUrl));
         }
     }
 }
