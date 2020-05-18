@@ -100,17 +100,17 @@ namespace OAuth2Net
             state.StateId = state.ProviderName + "_" + Guid.NewGuid().ToString("N");                
             state.ReturnUrl = returnUrl;
 
-            var authorizationUri = new UriBuilder(State.AuthorizationUrl);
+            var authorizationUri = new UriBuilder(state.AuthorizationUrl);
 
             authorizationUri.Query +=
                   (string.IsNullOrWhiteSpace(authorizationUri.Query) ? "" : "&") +
                   $"response_type=code" +
-                  $"&client_id={State.ClientId}" +
+                  $"&client_id={state.ClientId}" +
                   //(ClientSecret != null ? $"&client_secret={ClientSecret}" : "") +
-                  (State.AuthorizationParams != null ? $"&{State.AuthorizationParams}" : "") +
-                  (State.Scope == null ? "" : $"&scope={Uri.EscapeDataString(State.Scope)}") +
-                  $"&state={State.StateId}" +
-                  (State.RedirectUri == null ? "" : $"&redirect_uri={Uri.EscapeDataString(State.RedirectUri)}");
+                  (state.AuthorizationParams != null ? $"&{state.AuthorizationParams}" : "") +
+                  (state.Scope == null ? "" : $"&scope={Uri.EscapeDataString(state.Scope)}") +
+                  $"&state={state.StateId}" +
+                  (state.RedirectUri == null ? "" : $"&redirect_uri={Uri.EscapeDataString(state.RedirectUri)}");
 
             StateProvider[state.StateId] = state;
 

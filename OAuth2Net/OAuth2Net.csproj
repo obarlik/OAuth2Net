@@ -18,10 +18,10 @@ LinkedIn v2, GitHub, Facebook v3.3, Google v2</Description>
     <PackageIcon>oauthicon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/obarlik/OAuth2Net</PackageProjectUrl>
     <Authors>obarlik</Authors>
-    <Version>1.1.3.7</Version>
-    <PackageReleaseNotes>Scalability potential bug fixed.</PackageReleaseNotes>
-    <AssemblyVersion>1.1.3.7</AssemblyVersion>
-    <FileVersion>1.1.3.7</FileVersion>
+    <Version>1.1.4.8</Version>
+    <PackageReleaseNotes>BugFix: StateId not generated</PackageReleaseNotes>
+    <AssemblyVersion>1.1.4.8</AssemblyVersion>
+    <FileVersion>1.1.4.8</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
