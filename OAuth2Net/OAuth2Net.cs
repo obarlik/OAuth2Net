@@ -51,7 +51,6 @@ namespace OAuth2Net
             State = new OAuth2NetState
             {
                 ProviderName = providerName,
-                StateId = providerName + "_" + Guid.NewGuid().ToString("N"),
                 AuthorizationUrl = authorizationUrl,
                 AccessTokenUrl = accessTokenUrl,
                 ClientId = client_id,
@@ -98,6 +97,7 @@ namespace OAuth2Net
         {
             var state = State.Clone();
 
+            state.StateId = state.ProviderName + "_" + Guid.NewGuid().ToString("N");                
             state.ReturnUrl = returnUrl;
 
             var authorizationUri = new UriBuilder(State.AuthorizationUrl);
